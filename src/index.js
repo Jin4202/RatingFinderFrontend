@@ -13,7 +13,7 @@ import {
 
 import Layout from './components/Layout';
 import Home from './pages/Home';
-import BrowseItem from './pages/BrowseItem';
+import BrowseItem from './pages/item/BrowseItem';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
