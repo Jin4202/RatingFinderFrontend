@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {
   createBrowserRouter,
@@ -18,7 +19,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="search" element={<BrowseItem />} />
+        <Route path="browse" element={<BrowseItem />} />
 
       </Route>
 
