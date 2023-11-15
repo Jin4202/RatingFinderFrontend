@@ -40,6 +40,7 @@ export default function ReviewForm() {
       .catch((error) => {
         console.log(error);
       });
+    window.location.reload();
   };
 
   //fix and loop through the array to add

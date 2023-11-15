@@ -1,18 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import UserReview from "../components/UserReview/UserReview";
 import Review from "../components/Review/Review";
 import { useLocation, useParams } from "react-router-dom";
 import useAPIService from "../service/useAPIService";
 import {
+  getProductById,
   getReviewForProduct,
   getUserReviewForProduct,
+  searchProduct,
 } from "../service/APIService";
 import ReviewForm from "../components/ReviewForm";
+import axios from "axios";
+import CarouselCards from "../components/CarouselCards";
 
+/**
+ * This page contains:
+ * - Product Information
+ * - Professioanl Review Summaries
+ * - User Reviews
+ * - Carousel of Similar Products
+ * - Review Form
+ * @returns Product Page
+ */
 export default function ProductPage() {
   const { id } = useParams();
-  const product = useLocation().state;
+  const [similarProducts, setSimilarProducts] = useState();
+  // const product = useLocation().state;
 
   const [loading, data, error] = useAPIService(
     () => getUserReviewForProduct(id),
@@ -23,6 +37,30 @@ export default function ProductPage() {
     () => getReviewForProduct(id),
     []
   );
+
+  const [productLoading, product, productError] = useAPIService(
+    () => getProductById(id),
+    []
+  );
+  
+  console.log(id)
+  //Get similar products
+  useEffect(() => {
+    if (product) {
+      const brand = product.name.split(" ")[0];
+      axios
+        .get(`http://localhost:8080/search/keyword?keyword=${brand}`)
+        .then((response) => {
+          const similar = response.data.filter(
+            (item) => item.type == product.type
+          );
+          setSimilarProducts(similar);
+          console.log("similar", similar);
+        })
+        .catch(console.log(error));
+        
+    }
+  }, [product]);
 
   const whatHifi = () => {
     return (
@@ -52,21 +90,27 @@ export default function ProductPage() {
 
   return (
     <div className="product-page-container container">
-      <div className="product-information d-flex">
-        <div className="img-container">
-          <img
-            src={`data:image/jpg;base64,${product.image}`}
-            alt={`${product.name}`}
-          />
-        </div>
-        <div className="product-details">
-          <h1>{product.name}</h1>
-          {product.price > 0 && <h4>${product.price}</h4>}
+      {productError ? (
+        <p>ERROR IN LOADING PRODUCT</p>
+      ) : productLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="product-information d-flex">
+          <div className="img-container">
+            <img
+              src={`data:image/jpg;base64,${product.image}`}
+              alt={`${product.name}`}
+            />
+          </div>
+          <div className="product-details">
+            <h1>{product.name}</h1>
+            {product.price > 0 && <h4>${product.price}</h4>}
 
-          <p>5/5</p>
-          <h5>{`Brand: ${product.brand}`}</h5>
+            <p>5/5</p>
+            <h5>{`Brand: ${product.brand}`}</h5>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="product-professional-reviews">
         {reviewLoading ? (
@@ -80,6 +124,13 @@ export default function ProductPage() {
           </div>
         )}
       </div>
+
+      {similarProducts != null && (
+        <div className="similar-container container">
+          <h2>Similar Products</h2>
+          <CarouselCards products={similarProducts} />
+        </div>
+      )}
 
       <div className="create-review">
         <ReviewForm />

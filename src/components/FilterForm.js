@@ -81,8 +81,13 @@ export default function FilterForm() {
       e.preventDefault();
     }
   };
+
+  const style ={
+    height: "500px",
+    overflowY :"scroll"
+  }
   return (
-    <div className="filter-search-container container w-75 bg-light rounded p-3">
+    <div className="filter-search-container container w-50 bg-light rounded p-3">
       {formError && (
         <div className="alert alert-danger">
           FAILED TO SUBMIT FILTER FORM. CHECK THE FILTER VALUES AGAIN
@@ -98,19 +103,21 @@ export default function FilterForm() {
           ) : brandLoading ? (
             <p>Loading</p>
           ) : (
-            brandData.map((element) => (
-              <div key={element}>
-                <input
-                  type="checkbox"
-                  name="brands"
-                  id={element}
-                  value={element}
-                  checked={filter.brands.includes(element)}
-                  onChange={(e) => handleFilterUpdate(e)}
-                />
-                <label htmlFor={element}>{element}</label>
-              </div>
-            ))
+            <ul className="list-group " data-bs-spy="scroll" style={style}>
+              {brandData.map((element) => (
+                <li key={element} className="list-group-item">
+                  <input
+                    type="checkbox"
+                    name="brands"
+                    id={element}
+                    value={element}
+                    checked={filter.brands.includes(element)}
+                    onChange={(e) => handleFilterUpdate(e)}
+                  />
+                  <label htmlFor={element}>{element}</label>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 
@@ -121,19 +128,22 @@ export default function FilterForm() {
           ) : typeLoading ? (
             <p>Loading...</p>
           ) : (
-            productTypeData.map((element) => (
-              <div key={element}>
-                <input
-                  type="checkbox"
-                  name="productTypes"
-                  value={element}
-                  checked={filter.productTypes.includes(element)}
-                  onChange={(e) => handleFilterUpdate(e)}
-                  id={element}
-                />
-                <label htmlFor={element}>{element}</label>
-              </div>
-            ))
+            <ul className="list-group" >
+              {productTypeData.map((element) => (
+                <li key={element} className="list-group-item">
+                  <input
+                    type="checkbox"
+                    name="productTypes"
+                    className="form-check-input"
+                    value={element}
+                    checked={filter.productTypes.includes(element)}
+                    onChange={(e) => handleFilterUpdate(e)}
+                    id={element}
+                  />
+                  <label htmlFor={element}>{element}</label>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 

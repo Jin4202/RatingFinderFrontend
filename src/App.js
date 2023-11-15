@@ -8,6 +8,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProductPage from "./pages/ProductPage";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
+import SearchResults from "./pages/SearchResults";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/user">
           <Route path=":id" element={<UserProfile />} />
         </Route>
+
+        <Route path="/search/keyword" element={<SearchResults />} />
         <Route path="/signup" element={<SignUp />} />
 
         <Route path="*" element={<NotFoundPage />} />

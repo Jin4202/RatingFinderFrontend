@@ -88,6 +88,14 @@ export const getFilterProducts = (
   return promiseFilter;
 };
 
+export const searchProduct = (searchTerm) => {
+  const promiseSearch = axios
+    .get(`http://localhost:8080/search/keyword?keyword=${searchTerm}`)
+    .then((response) => response)
+    .catch((error) => console.log(error));
+  return promiseSearch;
+};
+
 // GET -- USER REVIEWS & REVIEWS
 export const getUserReviewForProduct = (id) => {
   const promiseUserReview = axios

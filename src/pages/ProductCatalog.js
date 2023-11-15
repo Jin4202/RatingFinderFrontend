@@ -12,9 +12,9 @@ import {
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import { Link, useParams, useSearchParams } from "react-router-dom";
+import Searchbar from "../components/Searchbar";
 
 export default function ProductCatalog() {
-
   //Below is the query parameters of the URL link
   const [searchParams] = useSearchParams();
   const pageNumber =
@@ -38,7 +38,7 @@ export default function ProductCatalog() {
     currentTotalPageSize: 1,
   });
 
-  //Below is a function that is used to make API calls 
+  //Below is a function that is used to make API calls
   const [loading, response, error] = useAPIService(
     () =>
       getFilterProducts(pageNumber, brands, product_type, minPrice, maxPrice),
@@ -115,8 +115,11 @@ export default function ProductCatalog() {
   };
 
   return (
-    <div>
-      {/* <FilterForm sendApiResponse={sendApiResponse} /> */}
+    <div className="">
+      <div className="container search-container">
+        <Searchbar />
+      </div>
+
 
       {error ? (
         <p>ERROR IN RESPONSE</p>
@@ -124,17 +127,21 @@ export default function ProductCatalog() {
         <p>LOADING...</p>
       ) : (
         <div className="product-catalog container d-flex flex-wrap">
-          {response.content.map((element) => {
-            return (
-              <Link
-                to={`/product/${element.prod_id}`}
-                key={element.prod_id}
-                state={element}
-              >
-                <Product product={element} />
-              </Link>
-            );
-          })}
+          {response.content.length > 0 ? (
+            response.content.map((element) => {
+              return (
+                <Link
+                  to={`/product/${element.prod_id}`}
+                  key={element.prod_id}
+                  // state={element}
+                >
+                  <Product product={element} />
+                </Link>
+              );
+            })
+          ) : (
+            <p>No products with such fitlers</p>
+          )}
         </div>
       )}
 
