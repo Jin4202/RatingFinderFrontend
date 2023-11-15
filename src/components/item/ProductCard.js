@@ -27,7 +27,6 @@ export default function ProductCard(props) {
                         marginLeft: 'auto',
                         marginRight: 'auto',
                     }} />
-
                 </Col>
             </Row>
             <Row>

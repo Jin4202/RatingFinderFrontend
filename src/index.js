@@ -14,12 +14,16 @@ import {
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import BrowseItem from './pages/item/BrowseItem';
+import Item from './pages/item/Item';
+import Signup from './pages/login/Signup';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="browse" element={<BrowseItem />} />
+        <Route path="item" element={<Item />} />
+        <Route path="signup" element={<Signup />} />
 
       </Route>
 

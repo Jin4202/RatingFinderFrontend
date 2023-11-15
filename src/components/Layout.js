@@ -55,6 +55,8 @@ export default function Layout(props) {
                     alignItems: 'center',
 
                     fontWeight: 'bold',
+
+                    marginTop: '80px',
                 }}>
                     <div>
                         Logo
