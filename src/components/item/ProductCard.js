@@ -4,10 +4,13 @@ import Col from 'react-bootstrap/Col';
 
 export default function ProductCard(props) {
     const product = props.data;
+
     const image = product.image;
     const name = product.name;
     const type = product.type;
     const price = product.price;
+    const id = product.prod_id;
+
 
     return (
         <Container style={{
@@ -24,7 +27,6 @@ export default function ProductCard(props) {
                         marginLeft: 'auto',
                         marginRight: 'auto',
                     }} />
-
                 </Col>
             </Row>
             <Row>
