@@ -26,24 +26,24 @@ import CarouselCards from "../components/CarouselCards";
 export default function ProductPage() {
   const { id } = useParams();
   const [similarProducts, setSimilarProducts] = useState();
+  
   // const product = useLocation().state;
 
   const [loading, data, error] = useAPIService(
     () => getUserReviewForProduct(id),
-    []
+    [id]
   );
 
   const [reviewLoading, reviewData, reviewError] = useAPIService(
     () => getReviewForProduct(id),
-    []
+    [id]
   );
 
   const [productLoading, product, productError] = useAPIService(
     () => getProductById(id),
-    []
+    [id]
   );
-  
-  console.log(id)
+
   //Get similar products
   useEffect(() => {
     if (product) {
@@ -58,32 +58,34 @@ export default function ProductPage() {
           console.log("similar", similar);
         })
         .catch(console.log(error));
-        
     }
   }, [product]);
 
   const whatHifi = () => {
+    const arr = reviewData
+      .filter((element) => element.company === "What HiFi")
+      .map((element, index) => {
+        return <Review review={element} key={index} />;
+      });
+
     return (
       <div>
         <h1>WhatHifi</h1>
-        {reviewData
-          .filter((element) => element.company === "What HiFi")
-          .map((element, index) => {
-            return <Review review={element} key={index} />;
-          })}
+        {arr.length > 0 ? arr : <p>No data review for this product</p>}
       </div>
     );
   };
 
   const techRadar = () => {
+    const arr = reviewData
+      .filter((element) => element.company === "TechRadar")
+      .map((element, index) => {
+        return <Review review={element} key={index} />;
+      });
     return (
       <div>
         <h1>TechRadar</h1>
-        {reviewData
-          .filter((element) => element.company === "TechRadar")
-          .map((element, index) => {
-            return <Review review={element} key={index} />;
-          })}
+        {arr.length > 0 ? arr : <p>No data review for this product</p>}
       </div>
     );
   };
