@@ -1,6 +1,8 @@
-export default function Home(props) {
+import { useContext } from "react";
+import AuthContext from "../contexts/AuthContext";
 
-    return (
-        <h1>Hello World</h1>
-    );    
+export default function Home(props) {
+    const {user} = useContext(AuthContext);
+    console.log('user', user)
+  return <h1>Hello {user ? user : "Guest"}</h1>;
 }
