@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import useAPIService from "../service/useAPIService";
 import { signup } from "../service/APIService";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -18,7 +20,6 @@ export default function SignUp() {
     error: false,
   });
 
-  
   const handleOnChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -31,6 +32,33 @@ export default function SignUp() {
   };
 
   console.log(response);
+
+  // const handleOnSubmit = (e) => {
+  //   e.preventDefault();
+  //   setResponse((prev) => ({
+  //     ...prev,
+  //     loading: true,
+  //   }));
+  //   axios
+  //     .post(`http://localhost:8080/api/signIn`, form)
+  //     .then((response) => {
+  //       setResponse(() => ({
+  //         loading: false,
+  //         data: response,
+  //         error: false,
+  //       }));
+  //       navigate("/confirmation", { state: { username: form.username } });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setResponse((prev) => ({
+  //         ...prev,
+  //         loading: false,
+  //         error: true,
+  //       }));
+  //     });
+  // };
+
   const handleOnSubmit = (e) => {
     e.preventDefault();
     setResponse((prev) => ({
@@ -38,15 +66,22 @@ export default function SignUp() {
       loading: true,
     }));
     axios
-      .post(
-        `http://localhost:8080/api/createUser?username=${form.username}&email=${form.email}&password=${form.password}&credit_level=${form.credit_level}`
-      )
+      .post(`http://localhost:8080/api/signUp`, form)
       .then((response) => {
-        setResponse(() => ({
-          loading: false,
-          data: response,
-          error: false,
-        }));
+        if (response.data.includes("New user has been signed Up")) {
+          setResponse(() => ({
+            loading: false,
+            data: response,
+            error: false,
+          }));
+          navigate("/confirmation", { state: { username: form.username } });
+        } else {
+          setResponse(() => ({
+            data: response,
+            loading: false,
+            error: true,
+          }));
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -57,7 +92,6 @@ export default function SignUp() {
         }));
       });
   };
-
   return (
     <div className="container">
       <h1>Create a new account</h1>
@@ -106,6 +140,7 @@ export default function SignUp() {
           Submit
         </button>
       </form>
+      <Link to ="/login">Have an accounnt? Click here to login</Link>
     </div>
   );
 }

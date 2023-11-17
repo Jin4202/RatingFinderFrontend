@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import UserReview from "../components/UserReview/UserReview";
 import Review from "../components/Review/Review";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import useAPIService from "../service/useAPIService";
 import {
   getProductById,
@@ -13,6 +13,7 @@ import {
 import ReviewForm from "../components/ReviewForm";
 import axios from "axios";
 import CarouselCards from "../components/CarouselCards";
+import AuthContext from "../contexts/AuthContext";
 
 /**
  * This page contains:
@@ -24,15 +25,19 @@ import CarouselCards from "../components/CarouselCards";
  * @returns Product Page
  */
 export default function ProductPage() {
+  const { user } = useContext(AuthContext);
   const { id } = useParams();
   const [similarProducts, setSimilarProducts] = useState();
-  
-  // const product = useLocation().state;
 
-  const [loading, data, error] = useAPIService(
-    () => getUserReviewForProduct(id),
-    [id]
-  );
+  // const product = useLocation().state;
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  // const [loading, data, error] = useAPIService(
+  //   () => getUserReviewForProduct(id),
+  //   [id]
+  // );
 
   const [reviewLoading, reviewData, reviewError] = useAPIService(
     () => getReviewForProduct(id),
@@ -44,6 +49,34 @@ export default function ProductPage() {
     [id]
   );
 
+  const handleReviewUpdate = (e) => {
+    axios
+      .get(`http://localhost:8080/product/${id}/userReview`)
+      .then((response) => {
+        console.log("response", response);
+        setLoading(false);
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(true);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`http://localhost:8080/product/${id}/userReview`)
+      .then((response) => {
+        setData(response.data);
+        setLoading(false);
+        setError(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   //Get similar products
   useEffect(() => {
     if (product) {
@@ -52,7 +85,7 @@ export default function ProductPage() {
         .get(`http://localhost:8080/search/keyword?keyword=${brand}`)
         .then((response) => {
           const similar = response.data.filter(
-            (item) => item.type == product.type
+            (item) => item.type == product.type && item.name != product.name
           );
           setSimilarProducts(similar);
           console.log("similar", similar);
@@ -127,7 +160,7 @@ export default function ProductPage() {
         )}
       </div>
 
-      {similarProducts != null && (
+      {(similarProducts != null && similarProducts.length > 0) && (
         <div className="similar-container container">
           <h2>Similar Products</h2>
           <CarouselCards products={similarProducts} />
@@ -135,7 +168,17 @@ export default function ProductPage() {
       )}
 
       <div className="create-review">
-        <ReviewForm />
+        {user ? (
+          <ReviewForm />
+        ) : (
+          <div className="container">
+            <h3>What do you think</h3>
+
+            <Link to="/signup">
+              <button>Write a review</button>
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="user-reviews-container container">
@@ -146,7 +189,7 @@ export default function ProductPage() {
         ) : data.length > 0 ? (
           <div>
             {data.map((element) => {
-              return <UserReview userReview={element} />;
+              return <UserReview userReview={element} handleReviewUpdate={handleReviewUpdate}/>;
             })}
           </div>
         ) : (

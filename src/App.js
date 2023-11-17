@@ -9,6 +9,8 @@ import ProductPage from "./pages/ProductPage";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import SearchResults from "./pages/SearchResults";
+import AuthContext from "./contexts/AuthContext";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -26,8 +28,9 @@ function App() {
         </Route>
 
         <Route path="/search/keyword" element={<SearchResults />} />
+        <Route path="/profile" element={<UserProfile />} />
         <Route path="/signup" element={<SignUp />} />
-
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

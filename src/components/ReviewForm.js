@@ -1,9 +1,11 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext";
 
 export default function ReviewForm() {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const [form, setForm] = useState({
     review_text: "",
     star: 1,
@@ -15,7 +17,7 @@ export default function ReviewForm() {
     const formData = new FormData();
 
     const data = {
-      user_id: 1,
+      user_id: user.user.user_id,
       review_text: form.review_text,
       rating: form.star,
       product_id: id,
