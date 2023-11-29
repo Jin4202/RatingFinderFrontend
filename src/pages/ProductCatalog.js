@@ -116,11 +116,6 @@ export default function ProductCatalog() {
 
   return (
     <div className="">
-      <div className="container search-container">
-        <Searchbar />
-      </div>
-
-
       {error ? (
         <p>ERROR IN RESPONSE</p>
       ) : loading ? (

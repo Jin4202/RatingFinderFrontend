@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
+import SearchResults from "../pages/SearchResults";
+import Searchbar from "./Searchbar";
 
 export default function Navbar() {
   const { user, setUser } = useContext(AuthContext);
@@ -9,13 +11,13 @@ export default function Navbar() {
   const logout = () => {
     setUser(null);
     alert("Sucessfully Logged Out");
-    navigate("/")  
+    navigate("/");
   };
   return (
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <Link className="navbar-brand" to="/">
-          Navbar
+          Rating Finder
         </Link>
 
         <button
@@ -45,9 +47,12 @@ export default function Navbar() {
             </li>
           </ul>
           <span className="d-flex">
+            <Searchbar/>
             {user ? (
               <>
-                <Link to="/profile">Profile</Link>
+                <Link to="/profile">
+                  <button className="btn btn-primary">Profile</button>
+                </Link>
                 <button onClick={logout} className="btn btn-primary">
                   Logout
                 </button>

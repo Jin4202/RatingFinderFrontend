@@ -16,9 +16,6 @@ export default function SearchResults() {
 
   return (
     <div>
-      <div className="container search-container">
-        <Searchbar />
-      </div>
       <h1>{`Searched Results for: ${keyword}`}</h1>
       {error ? (
         <p>ERROR</p>

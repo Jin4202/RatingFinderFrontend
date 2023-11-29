@@ -11,11 +11,11 @@ export default function Home() {
   return (
     <div className="d-flex flex-row container">
       <h1>Hello {user ? user.user.username : "Guest"}</h1>
-      <Searchbar />
+
       <FilterForm />
       <div className="show-all w-25">
         <Link to="/product?pageNumber=1">
-          <button type="button">View All Products</button>
+          <button type="button" className="btn btn-primary">View All Products</button>
         </Link>
       </div>
     </div>

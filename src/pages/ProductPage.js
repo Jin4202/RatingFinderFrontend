@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import UserReview from "../components/UserReview/UserReview";
 import Review from "../components/Review/Review";
@@ -34,11 +34,6 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  // const [loading, data, error] = useAPIService(
-  //   () => getUserReviewForProduct(id),
-  //   [id]
-  // );
-
   const [reviewLoading, reviewData, reviewError] = useAPIService(
     () => getReviewForProduct(id),
     [id]
@@ -49,6 +44,14 @@ export default function ProductPage() {
     [id]
   );
 
+  const hasMadeReview = (userID) => {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].user_id == userID) {
+        return true;
+      }
+    }
+    return false;
+  };
   const handleReviewUpdate = (e) => {
     axios
       .get(`http://localhost:8080/product/${id}/userReview`)
@@ -64,6 +67,13 @@ export default function ProductPage() {
       });
   };
 
+  const handleSaveProduct = (e) => {
+    axios
+      .post(`http://localhost:8080/save/${id}?userId=${user.user.user_id}`)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
+  };
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -76,7 +86,7 @@ export default function ProductPage() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [product]);
   //Get similar products
   useEffect(() => {
     if (product) {
@@ -88,7 +98,6 @@ export default function ProductPage() {
             (item) => item.type == product.type && item.name != product.name
           );
           setSimilarProducts(similar);
-          console.log("similar", similar);
         })
         .catch(console.log(error));
     }
@@ -144,6 +153,17 @@ export default function ProductPage() {
             <p>5/5</p>
             <h5>{`Brand: ${product.brand}`}</h5>
           </div>
+
+          {user && (
+            <div>
+              <button
+                className="btn btn-primary"
+                onClick={(e) => handleSaveProduct(e)}
+              >
+                Save Product
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -160,7 +180,7 @@ export default function ProductPage() {
         )}
       </div>
 
-      {(similarProducts != null && similarProducts.length > 0) && (
+      {similarProducts != null && similarProducts.length > 0 && (
         <div className="similar-container container">
           <h2>Similar Products</h2>
           <CarouselCards products={similarProducts} />
@@ -168,7 +188,15 @@ export default function ProductPage() {
       )}
 
       <div className="create-review">
-        {user ? (
+        {user && hasMadeReview(user.user.user_id) ? (
+          <></>
+        ) : user && !hasMadeReview(user.user.user_id) ? (
+          <ReviewForm />
+        ) : (
+          <p></p>
+        )}
+
+        {/* {user ? (
           <ReviewForm />
         ) : (
           <div className="container">
@@ -178,18 +206,25 @@ export default function ProductPage() {
               <button>Write a review</button>
             </Link>
           </div>
-        )}
+        )} */}
       </div>
 
       <div className="user-reviews-container container">
+        
         {loading ? (
           <p>LOADING USER REVIEWS...</p>
         ) : error ? (
           <p>ERROR IN LOADING USER REVIEWS</p>
         ) : data.length > 0 ? (
           <div>
+            <h2>User Reviews</h2>
             {data.map((element) => {
-              return <UserReview userReview={element} handleReviewUpdate={handleReviewUpdate}/>;
+              return (
+                <UserReview
+                  userReview={element}
+                  handleReviewUpdate={handleReviewUpdate}
+                />
+              );
             })}
           </div>
         ) : (

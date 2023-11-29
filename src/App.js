@@ -28,7 +28,9 @@ function App() {
         </Route>
 
         <Route path="/search/keyword" element={<SearchResults />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/profile" element={<UserProfile />}>
+          <Route path=":id" element={<UserProfile />} />
+        </Route>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFoundPage />} />

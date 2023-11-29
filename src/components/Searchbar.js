@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Searchbar() {
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -19,13 +20,19 @@ export default function Searchbar() {
   };
 
   return (
-    <form onSubmit={(e) => handleOnSubmit(e)}>
+    <form onSubmit={(e) => handleOnSubmit(e)} className="mr-3">
       <input
         type="text"
-        placeholder="Find Prouduct"
+        placeholder={
+          searchParams.get("keyword")
+            ? searchParams.get("keyword")
+            : "Search Product"
+        }
         onChange={(e) => handleOnChange(e)}
       />
-      <button type="submit">Search</button>
+      <button type="submit" className="btn btn-primary">
+        Search
+      </button>
     </form>
   );
 }

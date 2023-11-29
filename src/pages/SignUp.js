@@ -13,7 +13,7 @@ export default function SignUp() {
     password: "",
     credit_level: 1,
   });
-
+  const [repassword, setRepassword] = useState("");
   const [response, setResponse] = useState({
     loading: false,
     data: "",
@@ -65,37 +65,60 @@ export default function SignUp() {
       ...prev,
       loading: true,
     }));
-    axios
-      .post(`http://localhost:8080/api/signUp`, form)
-      .then((response) => {
-        if (response.data.includes("New user has been signed Up")) {
-          setResponse(() => ({
-            loading: false,
-            data: response,
-            error: false,
-          }));
-          navigate("/confirmation", { state: { username: form.username } });
-        } else {
-          setResponse(() => ({
-            data: response,
+    if (form.password != repassword) {
+      setResponse((prev) => {
+        return {
+          ...prev,
+          error: true,
+        };
+      });
+    } else {
+      axios
+        .post(`http://localhost:8080/api/signUp`, form)
+        .then((response) => {
+          if (response.data.includes("New user has been signed Up")) {
+            setResponse(() => ({
+              loading: false,
+              data: response,
+              error: false,
+            }));
+            navigate("/confirmation", { state: { username: form.username } });
+          } else {
+            setResponse(() => ({
+              data: response,
+              loading: false,
+              error: true,
+            }));
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setResponse((prev) => ({
+            ...prev,
             loading: false,
             error: true,
           }));
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setResponse((prev) => ({
-          ...prev,
-          loading: false,
-          error: true,
-        }));
-      });
+        });
+    }
   };
+
+  const disabledButton = () => {
+    if (
+      form.email === "" ||
+      form.username === "" ||
+      form.password === "" ||
+      form.password !== repassword
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div className="container">
       <h1>Create a new account</h1>
-      {response.error && <h1>ERROR In SIGNING UP</h1>}
+      {response.error && <h1>ERROR In SIGNING UP: {response.data.data}</h1>}
       <form id="signup" onSubmit={(e) => handleOnSubmit(e)}>
         <div>
           <label htmlFor="username">Username:</label>
@@ -136,11 +159,26 @@ export default function SignUp() {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <div>
+          <label htmlFor="password">Retype Pasword:</label>
+          <input
+            type="password"
+            id="password"
+            required
+            name="password"
+            placeholder="Enter Password"
+            className="form-control"
+            onChange={(e) => {
+              setRepassword(e.target.value);
+            }}
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary" >
           Submit
         </button>
       </form>
-      <Link to ="/login">Have an accounnt? Click here to login</Link>
+      <Link to="/login">Have an accounnt? Click here to login</Link>
     </div>
   );
 }

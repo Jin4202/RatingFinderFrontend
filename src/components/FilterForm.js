@@ -82,10 +82,10 @@ export default function FilterForm() {
     }
   };
 
-  const style ={
+  const style = {
     height: "500px",
-    overflowY :"scroll"
-  }
+    overflowY: "scroll",
+  };
   return (
     <div className="filter-search-container container w-50 bg-light rounded p-3">
       {formError && (
@@ -97,7 +97,8 @@ export default function FilterForm() {
 
       <form onSubmit={(e) => handleSubmit(e)}>
         <div className="option-section">
-          <h5 className="text-start">Product Type</h5>
+          <h5>Brands</h5>
+
           {brandError ? (
             <p>ERROR IN LOADING</p>
           ) : brandLoading ? (
@@ -122,13 +123,13 @@ export default function FilterForm() {
         </div>
 
         <div className="option-section">
-          <h5>Brands</h5>
+          <h5 className="text-start">Product Type</h5>
           {typeError ? (
             <p>ERROR IN FETCHING PRODUCT TYPES</p>
           ) : typeLoading ? (
             <p>Loading...</p>
           ) : (
-            <ul className="list-group" >
+            <ul className="list-group">
               {productTypeData.map((element) => (
                 <li key={element} className="list-group-item">
                   <input

@@ -12,8 +12,10 @@ export default function ReviewForm() {
     photos: [],
   });
 
+  console.log(form);
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    
     const formData = new FormData();
 
     const data = {
@@ -24,14 +26,14 @@ export default function ReviewForm() {
     };
     const data_string = JSON.stringify(data);
 
+    for (let i = 0; i < form.photos.length; i++) {
+      formData.append("file", form.photos[i]);
+    }
     formData.append(
       "data",
       new Blob([data_string], { type: "application/json" })
     );
-    console.log(form.photos);
-
-    formData.append("file", form.photos[0]);
-
+      
     axios
       .post(`http://localhost:8080/product/${id}/create`, formData, {
         headers: {
