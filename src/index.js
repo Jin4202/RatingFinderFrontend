@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import BrowseItem from './pages/item/BrowseItem';
 import Item from './pages/item/Item';
 import Signup from './pages/login/Signup';
+import MyPage from './pages/login/MyPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
         <Route path="browse" element={<BrowseItem />} />
         <Route path="item" element={<Item />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="mypage" element={<MyPage />} />
 
       </Route>
 
